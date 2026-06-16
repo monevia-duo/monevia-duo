@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MONEVIA-DUO</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --v:#1a7a4a;--vm:#2fa866;--vc:#e8f5ee;--vd:#0f5534;
+  --d:#d4a843;--dc:#fdf6e3;--dp:#b8912e;
+  --cr:#faf7f2;--bl:#ffffff;
+  --g:#6b7280;--gc:#f3f4f6;--gb:#e5e7eb;
+  --t:#1f2937;--ts:#4b5563;
+  --sh:0 4px 24px rgba(26,122,74,.10);
+  --sh2:0 8px 40px rgba(0,0,0,.10);
+  --gold-g:linear-gradient(135deg,#f6d365 0%,#d4a843 50%,#c49020 100%);
+  --prem-g:linear-gradient(135deg,#0f5534 0%,#1a7a4a 50%,#2fa866 100%);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cr);color:var(--t);min-height:100vh;overflow-x:hidden}
+.vista{display:none;min-height:100vh;flex-direction:column}
+.vista.activa{display:flex}
+
+/* ======= AUTH ======= */
+#vA{background:var(--cr);align-items:center;justify-content:center;position:relative;overflow:hidden;min-height:100vh}
+#vA::before{content:'';position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=40&w=1200') center/cover no-repeat;opacity:.05}
+.auth-wrap{display:flex;max-width:880px;width:100%;min-height:540px;border-radius:26px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,.14);position:relative;z-index:1;margin:2rem;animation:fadeUp .5s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.al{flex:1;background:linear-gradient(145deg,var(--vd),var(--v) 60%,#1e9458);color:#fff;padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.al::before{content:'';position:absolute;top:-60px;right:-60px;width:260px;height:260px;background:rgba(212,168,67,.15);border-radius:50%}
+.al-logo{position:relative;z-index:1}
+.al-logo h1{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700}
+.al-logo p{font-size:.78rem;opacity:.72;margin-top:.25rem;letter-spacing:.05em;text-transform:uppercase}
+.al-body{position:relative;z-index:1}
+.al-body h2{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:600;line-height:1.3;margin-bottom:.85rem}
+.al-body h2 em{color:var(--d);font-style:italic}
+.al-feats{display:flex;flex-direction:column;gap:.55rem}
+.al-f{display:flex;align-items:center;gap:.65rem;font-size:.81rem;opacity:.88}
+.al-f span:first-child{width:26px;height:26px;background:rgba(255,255,255,.12);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0}
+.al-bot{font-size:.73rem;opacity:.45;position:relative;z-index:1}
+.ar{background:var(--bl);padding:2.8rem 2.4rem;width:370px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center}
+.auth-tabs{display:flex;background:var(--gc);border-radius:11px;padding:3px;margin-bottom:1.7rem;gap:3px}
+.auth-tab{flex:1;padding:.5rem;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.83rem;cursor:pointer;background:none;color:var(--g);transition:all .2s;font-weight:500}
+.auth-tab.on{background:var(--bl);color:var(--v);box-shadow:0 2px 8px rgba(0,0,0,.08);font-weight:600}
+.fg{margin-bottom:.95rem}
+.fg label{display:block;font-size:.75rem;font-weight:600;color:var(--ts);margin-bottom:.4rem;letter-spacing:.03em;text-transform:uppercase}
+.fg input{width:100%;padding:.7rem .95rem;border:1.5px solid var(--gb);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.87rem;background:var(--cr);outline:none;transition:border .2s;color:var(--t)}
+.fg input:focus{border-color:var(--v);background:#fff}
+.fg input::placeholder{color:#b8bdc4}
+.btn-auth{width:100%;background:var(--v);color:#fff;border:none;border-radius:10px;padding:.86rem;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:.35rem;transition:all .2s}
+.btn-auth:hover{background:var(--vm);transform:translateY(-1px);box-shadow:0 4px 14px rgba(26,122,74,.28)}
+.auth-or{text-align:center;font-size:.74rem;color:var(--g);margin:.8rem 0;position:relative}
+.auth-or::before,.auth-or::after{content:'';position:absolute;top:50%;width:38%;height:1px;background:var(--gb)}
+.auth-or::before{left:0}.auth-or::after{right:0}
+.btn-demo{width:100%;background:none;border:1.5px solid var(--gb);border-radius:10px;padding:.75rem;font-size:.83rem;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--ts);transition:border .2s;display:flex;align-items:center;justify-content:center;gap:.45rem}
+.btn-demo:hover{border-color:var(--v);color:var(--v)}
+.err{background:#fef2f2;border:1px solid #fecaca;border-radius:9px;padding:.55rem .88rem;font-size:.78rem;color:#b91c1c;margin-bottom:.65rem;display:none}
+.err.on{display:block}
+.auth-note{text-align:center;font-size:.73rem;color:var(--g);margin-top:1rem}
+
+/* ======= HEADER ======= */
+header{background:var(--bl);border-bottom:1.5px solid var(--gb);position:sticky;top:0;z-index:100;padding:0 2rem}
+.hi{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:.9rem;height:64px}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--v);display:flex;align-items:center;gap:.35rem;white-space:nowrap;cursor:pointer}
+.logo em{color:var(--d);font-style:normal;font-weight:400;font-size:.95rem}
+/* PLAN BADGE EN HEADER */
+.plan-chip{padding:.28rem .75rem;border-radius:50px;font-size:.72rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.plan-chip.free{background:var(--gc);color:var(--ts);border:1px solid var(--gb)}
+.plan-chip.prem{background:var(--gold-g);color:#5a3a00;border:none;box-shadow:0 2px 8px rgba(212,168,67,.35)}
+.ns{flex:1;position:relative;max-width:320px}
+.ns input{width:100%;padding:.54rem 1rem .54rem 2.2rem;border:1.5px solid var(--gb);border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.83rem;background:var(--gc);outline:none;transition:border .2s}
+.ns input:focus{border-color:var(--v);background:#fff}
+.ns-ic{position:absolute;left:.78rem;top:50%;transform:translateY(-50%);color:var(--g);font-size:.8rem}
+.cbtn{position:relative;background:none;border:1.5px solid var(--gb);border-radius:50px;padding:.44rem .85rem;cursor:pointer;font-size:.83rem;display:flex;align-items:center;gap:.3rem;color:var(--t);transition:border .2s}
+.cbtn:hover{border-color:var(--v)}
+.cbadge{background:var(--d);color:#fff;border-radius:50%;width:16px;height:16px;font-size:.65rem;display:flex;align-items:center;justify-content:center;position:absolute;top:-6px;right:-6px}
+.ua{position:relative}
+.av-btn{width:37px;height:37px;border-radius:50%;background:var(--v);color:#fff;border:none;font-size:.8rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;transition:box-shadow .2s}
+.av-btn:hover{box-shadow:0 0 0 3px rgba(26,122,74,.22)}
+.dd{position:absolute;right:0;top:calc(100% + 10px);background:var(--bl);border:1px solid var(--gb);border-radius:14px;min-width:190px;box-shadow:var(--sh2);display:none;flex-direction:column;overflow:hidden;z-index:200}
+.dd.on{display:flex}
+.dd-hd{padding:.85rem 1rem .58rem;border-bottom:1px solid var(--gb)}
+.dd-hd strong{font-size:.84rem;display:block}
+.dd-hd span{font-size:.72rem;color:var(--g)}
+.dd-plan{padding:.5rem 1rem;font-size:.75rem;font-weight:600;background:var(--dc);color:var(--dp);border-bottom:1px solid var(--gb);display:flex;align-items:center;gap:.4rem}
+.ddi{padding:.65rem 1rem;font-size:.82rem;cursor:pointer;display:flex;align-items:center;gap:.42rem;transition:background .15s;border:none;background:none;width:100%;text-align:left;color:var(--t);font-family:'DM Sans',sans-serif}
+.ddi:hover{background:var(--gc)}
+.ddi.red{color:#dc2626}.ddi.red:hover{background:#fef2f2}
+.btn-ing{background:var(--v);color:#fff;border:none;border-radius:50px;padding:.46rem 1.05rem;font-size:.82rem;font-weight:500;cursor:pointer;transition:background .2s}
+.btn-ing:hover{background:var(--vm)}
+
+/* ======= PÁGINA PLANES ======= */
+#vPlanes{background:var(--cr)}
+.planes-hero{background:linear-gradient(135deg,var(--vd),var(--v));color:#fff;padding:3.5rem 2rem;text-align:center;position:relative;overflow:hidden}
+.planes-hero::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;background:rgba(212,168,67,.12);border-radius:50%}
+.planes-hero h1{font-family:'Cormorant Garamond',serif;font-size:2.3rem;font-weight:700;position:relative;z-index:1}
+.planes-hero h1 em{color:var(--d);font-style:italic}
+.planes-hero p{font-size:.92rem;opacity:.85;margin-top:.7rem;max-width:540px;margin-left:auto;margin-right:auto;position:relative;z-index:1;line-height:1.6}
+.planes-main{max-width:900px;margin:0 auto;padding:3rem 2rem}
+.planes-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:3rem}
+/* TARJETA PLAN */
+.plan-card{border-radius:22px;overflow:hidden;border:2px solid var(--gb);transition:transform .22s,box-shadow .22s;position:relative;background:var(--bl)}
+.plan-card:hover{transform:translateY(-5px);box-shadow:var(--sh2)}
+.plan-card.prem-card{border-color:var(--d);box-shadow:0 8px 32px rgba(212,168,67,.22)}
+.plan-card.prem-card .pc-head{background:var(--prem-g)}
+.pc-head{background:var(--gc);padding:2rem 1.8rem;color:var(--t);position:relative}
+.plan-card.prem-card .pc-head{color:#fff}
+.pc-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;opacity:.7}
+.plan-card.prem-card .pc-label{opacity:.8;color:var(--d)}
+.pc-name{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:700;margin-bottom:.3rem}
+.pc-price{font-size:2.2rem;font-weight:700;line-height:1}
+.pc-price sub{font-size:.9rem;font-weight:400;opacity:.75}
+.pc-price sup{font-size:1rem;vertical-align:top;margin-top:.4rem;display:inline-block}
+.pc-period{font-size:.78rem;opacity:.65;margin-top:.25rem}
+.prem-badge{position:absolute;top:1rem;right:1rem;background:var(--gold-g);color:#5a3a00;border-radius:50px;padding:.25rem .75rem;font-size:.7rem;font-weight:700}
+.pc-body{padding:1.6rem 1.8rem}
+.feat-list{list-style:none;display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.5rem}
+.feat-list li{display:flex;align-items:flex-start;gap:.6rem;font-size:.85rem;color:var(--ts);line-height:1.4}
+.feat-list li .ico{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;flex-shrink:0;margin-top:.05rem}
+.feat-list li .ico.ok{background:#d1fae5;color:#059669}
+.feat-list li .ico.lok{background:var(--gc);color:var(--g)}
+.btn-plan{width:100%;border:none;border-radius:12px;padding:.9rem;font-size:.92rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+.btn-free{background:var(--vc);color:var(--v);border:1.5px solid var(--v)}
+.btn-free:hover{background:var(--v);color:#fff}
+.btn-prem{background:var(--gold-g);color:#4a2c00;box-shadow:0 4px 16px rgba(212,168,67,.4)}
+.btn-prem:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(212,168,67,.5)}
+.plan-actual-badge{display:flex;align-items:center;justify-content:center;gap:.4rem;margin-top:.7rem;font-size:.78rem;color:var(--g)}
+.plan-actual-badge.ok{color:var(--vm);font-weight:500}
+
+/* COMPARATIVA */
+.comp-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;margin-bottom:1.2rem;text-align:center}
+.comp-table{width:100%;border-collapse:collapse;background:var(--bl);border-radius:16px;overflow:hidden;box-shadow:var(--sh)}
+.comp-table th{padding:.85rem 1.2rem;font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.comp-table th:first-child{text-align:left;background:var(--gc);color:var(--ts)}
+.comp-table th:nth-child(2){background:var(--vc);color:var(--v);width:130px}
+.comp-table th:nth-child(3){background:var(--vd);color:var(--d);width:130px}
+.comp-table td{padding:.78rem 1.2rem;border-bottom:1px solid var(--gb);font-size:.83rem}
+.comp-table td:first-child{color:var(--ts)}
+.comp-table td:not(:first-child){text-align:center;font-size:1rem}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table tr:hover td{background:rgba(26,122,74,.03)}
+.chk{color:#059669}.crs{color:#d1d5db;font-size:.8rem}
+
+/* ======= TIENDA ======= */
+.hero{background:linear-gradient(135deg,var(--v),var(--vd));color:#fff;padding:3rem 2rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60px;right:-90px;width:320px;height:320px;background:rgba(212,168,67,.12);border-radius:50%}
+.hero-in{max-width:720px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.hero h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;margin-bottom:.65rem;line-height:1.2}
+.hero h2 em{color:var(--d);font-style:italic}
+.hero p{font-size:.9rem;opacity:.88;margin-bottom:1.4rem;line-height:1.65}
+.hbs{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap}
+.hb{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:50px;padding:.28rem .78rem;font-size:.77rem}
+/* BANNER PLAN ACTIVO */
+.plan-banner{padding:.75rem 2rem;text-align:center;font-size:.82rem;font-weight:500;display:flex;align-items:center;justify-content:center;gap:.6rem}
+.plan-banner.free{background:var(--gc);color:var(--ts);border-bottom:1px solid var(--gb)}
+.plan-banner.prem{background:linear-gradient(90deg,#0f5534,#1a7a4a,#0f5534);color:#fff}
+.plan-banner a{color:var(--d);cursor:pointer;text-decoration:underline;font-weight:600}
+.plan-banner.prem a{color:var(--d)}
+.fw{background:var(--bl);border-bottom:1px solid var(--gb);padding:.7rem 2rem;overflow-x:auto}
+.fi{display:flex;gap:.5rem;max-width:1240px;margin:0 auto;min-width:max-content}
+.fbt{background:none;border:1.5px solid var(--gb);border-radius:50px;padding:.35rem .85rem;font-size:.8rem;cursor:pointer;transition:all .2s;color:var(--ts);white-space:nowrap}
+.fbt.on,.fbt:hover{background:var(--v);color:#fff;border-color:var(--v)}
+.main{max-width:1240px;margin:0 auto;padding:2rem}
+.st{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:600;margin-bottom:1.3rem}
+
+/* ======= CARDS ======= */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.2rem}
+.card{background:var(--bl);border-radius:18px;border:1px solid var(--gb);overflow:hidden;transition:transform .22s,box-shadow .22s;cursor:pointer;position:relative}
+.card:hover{transform:translateY(-4px);box-shadow:var(--sh)}
+/* LOCK OVERLAY */
+.card.locked{cursor:default}
+.card.locked .card-img-wrap img{filter:blur(2px);transform:scale(1.05)}
+.lock-ov{position:absolute;inset:0;background:rgba(15,45,30,.7);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;gap:.5rem;opacity:0;transition:opacity .2s;border-radius:18px}
+.card.locked:hover .lock-ov{opacity:1}
+.lock-ov .lock-ico{font-size:2rem}
+.lock-ov p{color:#fff;font-size:.8rem;font-weight:500;text-align:center;padding:0 1rem}
+.lock-ov .btn-unlock{background:var(--gold-g);color:#4a2c00;border:none;border-radius:50px;padding:.38rem .95rem;font-size:.76rem;font-weight:600;cursor:pointer;margin-top:.2rem}
+/* BADGE PREMIUM EN CARD */
+.card-prem-tag{position:absolute;top:.65rem;right:.65rem;z-index:5;background:var(--gold-g);color:#4a2c00;border-radius:50px;padding:.2rem .6rem;font-size:.67rem;font-weight:700}
+.card-free-tag{position:absolute;top:.65rem;right:.65rem;z-index:5;background:rgba(255,255,255,.92);color:var(--v);border-radius:50px;padding:.2rem .6rem;font-size:.67rem;font-weight:700;border:1px solid var(--vc)}
+.ciw{position:relative;overflow:hidden;height:180px}
+.ciw img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.card:hover .ciw img{transform:scale(1.04)}
+.cov{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(15,85,52,.32) 100%)}
+.cb-t{position:absolute;top:.65rem;left:.65rem;background:rgba(255,255,255,.92);border-radius:50px;padding:.2rem .68rem;font-size:.68rem;font-weight:600;color:var(--v);backdrop-filter:blur(4px)}
+.pop-tag{position:absolute;bottom:.65rem;left:.65rem;background:var(--d);color:#fff;border-radius:50px;padding:.2rem .6rem;font-size:.67rem;font-weight:600}
+.cbb{padding:.95rem 1.05rem}
+.ccat{font-size:.68rem;font-weight:600;color:var(--v);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.28rem}
+.cnm{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;margin-bottom:.32rem;line-height:1.3}
+.cds{font-size:.78rem;color:var(--ts);line-height:1.5;margin-bottom:.8rem}
+.cft{display:flex;align-items:center;justify-content:space-between}
+.pr{font-size:.98rem;font-weight:600;color:var(--v)}
+.pro{font-size:.74rem;color:var(--g);text-decoration:line-through;margin-left:.2rem}
+.btn-ag{background:var(--v);color:#fff;border:none;border-radius:50px;padding:.36rem .88rem;font-size:.76rem;font-weight:500;cursor:pointer;transition:background .2s}
+.btn-ag:hover{background:var(--vm)}
+.btn-ag.disabled{background:var(--gc);color:var(--g);cursor:not-allowed}
+
+/* ======= CALCULADORA GRATIS ======= */
+.calc-section{background:linear-gradient(135deg,var(--vc),#d4f0e3);border:1.5px solid rgba(26,122,74,.2);border-radius:20px;padding:1.8rem;margin-bottom:2rem}
+.calc-head{display:flex;align-items:center;gap:.8rem;margin-bottom:1.2rem}
+.calc-head h3{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--vd)}
+.calc-free-badge{background:var(--v);color:#fff;border-radius:50px;padding:.22rem .7rem;font-size:.7rem;font-weight:600}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.2rem}
+.calc-field label{display:block;font-size:.75rem;font-weight:600;color:var(--ts);margin-bottom:.38rem;text-transform:uppercase;letter-spacing:.03em}
+.calc-field input{width:100%;padding:.65rem .9rem;border:1.5px solid rgba(26,122,74,.2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.88rem;background:#fff;outline:none;transition:border .2s;color:var(--t)}
+.calc-field input:focus{border-color:var(--v)}
+.btn-calc{background:var(--v);color:#fff;border:none;border-radius:10px;padding:.78rem 1.5rem;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-calc:hover{background:var(--vm)}
+.calc-result{background:#fff;border-radius:12px;padding:1.2rem;margin-top:1rem;display:none;border:1px solid rgba(26,122,74,.15)}
+.calc-result.show{display:block;animation:fadeUp .3s ease}
+.cr-row{display:flex;justify-content:space-between;padding:.42rem 0;border-bottom:1px solid var(--gb);font-size:.85rem}
+.cr-row:last-child{border-bottom:none;font-weight:700;color:var(--v);font-size:.92rem;padding-top:.6rem;margin-top:.2rem}
+.cr-row span:last-child{font-weight:600}
+
+/* ======= MODAL ======= */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:300;align-items:center;justify-content:center;padding:1rem}
+.ov.on{display:flex}
+.modal{background:var(--bl);border-radius:22px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto}
+.mh{position:relative;overflow:hidden;height:210px}
+.mh img{width:100%;height:100%;object-fit:cover}
+.mh-grad{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(15,85,52,.75) 100%);display:flex;align-items:flex-end;padding:1.3rem}
+.mh-grad h2{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:#fff;font-weight:700}
+.mh-grad p{font-size:.78rem;color:rgba(255,255,255,.8);margin-top:.18rem}
+.mb{padding:1.3rem}
+.m-ia{background:var(--vc);border-left:3px solid var(--v);border-radius:0 10px 10px 0;padding:.85rem;font-size:.84rem;line-height:1.6;margin-bottom:1rem;min-height:50px}
+.m-pr{font-size:1.5rem;font-weight:700;color:var(--v);margin-bottom:1rem}
+.m-pr span{font-size:.86rem;color:var(--g);text-decoration:line-through;font-weight:400}
+/* MODAL LOCKED */
+.m-locked{background:linear-gradient(135deg,var(--dc),#fff9e6);border:1.5px solid var(--d);border-radius:14px;padding:1.4rem;text-align:center;margin-bottom:1rem}
+.m-locked .li{font-size:2.5rem;margin-bottom:.7rem}
+.m-locked h3{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--vd);margin-bottom:.4rem}
+.m-locked p{font-size:.82rem;color:var(--ts);margin-bottom:1rem;line-height:1.5}
+.btn-upgrade{width:100%;background:var(--gold-g);color:#4a2c00;border:none;border-radius:12px;padding:.9rem;font-size:.92rem;font-weight:700;cursor:pointer;margin-bottom:.5rem;transition:all .2s;box-shadow:0 4px 16px rgba(212,168,67,.35)}
+.btn-upgrade:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(212,168,67,.5)}
+.btn-mc{width:100%;background:var(--v);color:#fff;border:none;border-radius:12px;padding:.88rem;font-size:.92rem;font-weight:600;cursor:pointer;margin-bottom:.5rem;transition:all .2s}
+.btn-mc:hover{background:var(--vm)}
+.btn-mcl{width:100%;background:none;border:1.5px solid var(--gb);border-radius:12px;padding:.73rem;font-size:.86rem;cursor:pointer;color:var(--ts)}
+.btn-mcl:hover{background:var(--gc)}
+.sp{width:13px;height:13px;border:2px solid var(--gb);border-top-color:var(--v);border-radius:50%;animation:spin .8s linear infinite;display:inline-block;margin-right:.32rem;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ======= PERFIL ======= */
+.ph{background:linear-gradient(135deg,var(--v),var(--vd));color:#fff;padding:2.4rem 2rem}
+.phi{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:1.4rem}
+.p-av{width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;font-weight:700;flex-shrink:0;border:2px solid rgba(255,255,255,.3)}
+.p-inf h2{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:700}
+.p-inf p{font-size:.82rem;opacity:.75;margin-top:.2rem}
+.p-plan-badge{border-radius:50px;padding:.28rem .78rem;font-size:.75rem;font-weight:600;margin-top:.45rem;display:inline-flex;align-items:center;gap:.35rem}
+.p-plan-badge.free{background:rgba(255,255,255,.18);color:#fff}
+.p-plan-badge.prem{background:var(--gold-g);color:#4a2c00}
+.pd{background:var(--bl);border:1px solid var(--gb);border-radius:16px;padding:1.25rem;margin-bottom:1.6rem}
+.pd h3{font-family:'Cormorant Garamond',serif;font-size:1rem;margin-bottom:.85rem;color:var(--v)}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.dato{background:var(--cr);border-radius:10px;padding:.72rem .9rem}
+.dato label{font-size:.68rem;color:var(--g);font-weight:600;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:.26rem}
+.dato p{font-size:.87rem;font-weight:500}
+/* UPGRADE CTA EN PERFIL */
+.upgrade-cta{background:linear-gradient(135deg,var(--vd),var(--v));border-radius:18px;padding:1.8rem;margin-bottom:1.6rem;color:#fff;display:flex;align-items:center;gap:1.5rem}
+.upgrade-cta.hidden{display:none}
+.uc-txt h3{font-family:'Cormorant Garamond',serif;font-size:1.25rem;margin-bottom:.4rem}
+.uc-txt p{font-size:.82rem;opacity:.82;line-height:1.5}
+.btn-uc{background:var(--gold-g);color:#4a2c00;border:none;border-radius:50px;padding:.7rem 1.5rem;font-size:.85rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s;box-shadow:0 4px 14px rgba(212,168,67,.35)}
+.btn-uc:hover{transform:translateY(-1px)}
+.adq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.9rem}
+.adq-card{background:var(--bl);border:1px solid var(--gb);border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.adq-card:hover{transform:translateY(-3px);box-shadow:var(--sh)}
+.adq-img{width:100%;height:125px;object-fit:cover;display:block}
+.adq-b{padding:.82rem}
+.adq-tag{font-size:.66rem;font-weight:600;color:var(--v);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.26rem}
+.adq-n{font-family:'Cormorant Garamond',serif;font-size:.9rem;font-weight:600;margin-bottom:.36rem}
+.adq-st{display:flex;align-items:center;gap:.3rem;font-size:.72rem;color:#059669;font-weight:500}
+
+/* ======= CARRITO ======= */
+.cp{position:fixed;right:-380px;top:0;bottom:0;width:350px;background:var(--bl);box-shadow:-4px 0 24px rgba(0,0,0,.12);z-index:250;transition:right .3s;display:flex;flex-direction:column}
+.cp.on{right:0}
+.cp-h{background:var(--v);color:#fff;padding:1.05rem 1.35rem;display:flex;justify-content:space-between;align-items:center}
+.cp-h h3{font-family:'Cormorant Garamond',serif;font-size:1rem}
+.bx{background:none;border:none;color:#fff;font-size:1.05rem;cursor:pointer}
+.cp-it{flex:1;overflow-y:auto;padding:.85rem 1.35rem}
+.ci{display:flex;gap:.65rem;padding:.65rem 0;border-bottom:1px solid var(--gb);align-items:center}
+.ci-img{width:42px;height:42px;border-radius:8px;object-fit:cover;flex-shrink:0}
+.ci-inf{flex:1}
+.ci-n{font-size:.82rem;font-weight:500}
+.ci-p{font-size:.79rem;color:var(--v);font-weight:600}
+.ci-d{background:none;border:none;color:var(--g);cursor:pointer;font-size:.8rem}
+.ci-d:hover{color:#dc2626}
+.cp-ft{padding:1.05rem 1.35rem;border-top:1.5px solid var(--gb)}
+.tl{display:flex;justify-content:space-between;margin-bottom:.36rem;font-size:.84rem}
+.tl.G{font-weight:700;font-size:1.02rem;color:var(--v);margin-top:.36rem}
+.btn-pag{width:100%;background:var(--d);color:#fff;border:none;border-radius:12px;padding:.88rem;font-size:.92rem;font-weight:600;cursor:pointer;margin-top:.65rem;transition:background .2s}
+.btn-pag:hover{background:var(--dp)}
+.cv{text-align:center;padding:1.8rem;color:var(--g);font-size:.84rem}
+
+/* CHAT */
+.cfab{position:fixed;bottom:1.4rem;right:1.4rem;z-index:120;background:var(--v);color:#fff;border:none;border-radius:50%;width:52px;height:52px;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 18px rgba(26,122,74,.38);display:flex;align-items:center;justify-content:center;transition:transform .2s}
+.cfab:hover{transform:scale(1.08)}
+.cpan{position:fixed;bottom:4.8rem;right:1.4rem;z-index:120;width:300px;background:var(--bl);border-radius:18px;box-shadow:var(--sh2);display:none;flex-direction:column;max-height:400px;border:1px solid var(--gb)}
+.cpan.on{display:flex}
+.ch{background:var(--v);color:#fff;padding:.86rem 1.1rem;border-radius:18px 18px 0 0;display:flex;align-items:center;gap:.55rem}
+.ch-av{width:29px;height:29px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.ch-hi strong{font-size:.84rem}
+.ch-hi p{font-size:.7rem;opacity:.72}
+.cms{flex:1;overflow-y:auto;padding:.86rem;display:flex;flex-direction:column;gap:.55rem}
+.msg{max-width:83%;padding:.56rem .8rem;border-radius:12px;font-size:.79rem;line-height:1.5}
+.msg.bot{background:var(--vc);color:var(--t);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.usr{background:var(--v);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.cin{padding:.65rem;border-top:1px solid var(--gb);display:flex;gap:.4rem}
+.cin input{flex:1;border:1.5px solid var(--gb);border-radius:50px;padding:.44rem .8rem;font-size:.78rem;outline:none;font-family:'DM Sans',sans-serif}
+.cin input:focus{border-color:var(--v)}
+.csnd{background:var(--v);color:#fff;border:none;border-radius:50%;width:29px;height:29px;cursor:pointer;font-size:.88rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* FOOTER */
+footer{background:#0b2318;color:#fff;padding:2.6rem 2rem 1.7rem;margin-top:auto}
+.fi2{max-width:1240px;margin:0 auto}
+.ft{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2rem;margin-bottom:1.7rem}
+.fb2 h3{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--d);margin-bottom:.42rem}
+.fb2 p{font-size:.78rem;opacity:.6;line-height:1.6}
+.fc h4{font-size:.81rem;font-weight:600;margin-bottom:.62rem;color:var(--d)}
+.fc ul{list-style:none;display:flex;flex-direction:column;gap:.4rem}
+.fc ul li a{font-size:.77rem;opacity:.6;text-decoration:none;color:#fff;transition:opacity .2s}
+.fc ul li a:hover{opacity:1}
+.redes{display:flex;gap:.52rem;margin-top:.85rem;flex-wrap:wrap}
+.red{display:flex;align-items:center;gap:.36rem;padding:.38rem .78rem;border-radius:50px;font-size:.74rem;font-weight:500;text-decoration:none;transition:transform .2s}
+.red:hover{transform:translateY(-2px)}
+.tt{background:#010101;color:#fff;border:1px solid #333}
+.ig{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff}
+.fb3{background:#1877f2;color:#fff}
+.wa{background:#25d366;color:#fff}
+.fbot{border-top:1px solid rgba(255,255,255,.1);padding-top:.95rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.4rem}
+.fbot p{font-size:.74rem;opacity:.42}
+.gar{background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.25);border-radius:50px;padding:.24rem .7rem;font-size:.7rem;color:var(--d)}
+
+/* LOGOUT */
+.lo{position:fixed;inset:0;background:rgba(11,35,24,.9);z-index:999;display:none;align-items:center;justify-content:center;flex-direction:column;gap:.85rem;color:#fff}
+.lo.on{display:flex}
+.lo-ic{font-size:2.6rem;animation:pulse .75s ease-in-out infinite alternate}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.1)}}
+.lo p{font-family:'Cormorant Garamond',serif;font-size:1.15rem}
+.lo small{font-size:.78rem;opacity:.6}
+.iar{background:var(--vc);border:1px solid rgba(26,122,74,.18);border-radius:12px;padding:.85rem 1.05rem;margin-bottom:1.3rem;font-size:.84rem;color:var(--t);line-height:1.6;display:none}
+.iar.on{display:block}
+.toast{position:fixed;top:74px;right:1.4rem;background:var(--v);color:#fff;border-radius:12px;padding:.7rem 1.05rem;font-size:.82rem;z-index:400;box-shadow:var(--sh);transform:translateX(130%);transition:transform .3s;font-weight:500;pointer-events:none;max-width:270px}
+.toast.on{transform:translateX(0)}
+
+@media(max-width:720px){
+  .auth-wrap{flex-direction:column;margin:1rem}
+  .al{padding:2rem;min-height:180px}
+  .ar{width:100%;padding:2rem}
+  .hi{flex-wrap:wrap;height:auto;padding:.55rem 0;gap:.45rem}
+  .ns{max-width:100%;order:3;width:100%}
+  .ft{grid-template-columns:1fr}
+  .planes-grid{grid-template-columns:1fr}
+  .dg{grid-template-columns:1fr}
+  .calc-grid{grid-template-columns:1fr}
+  .upgrade-cta{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ====== AUTH ====== -->
+<div id="vA" class="vista activa">
+  <div class="auth-wrap">
+    <div class="al">
+      <div class="al-logo"><div style="font-size:1.7rem;margin-bottom:.35rem">💚</div><h1>MONEVIA-DUO</h1><p>Educación Financiera para Parejas</p></div>
+      <div class="al-body">
+        <h2>Construyan juntos su <em>libertad financiera</em></h2>
+        <div class="al-feats">
+          <div class="al-f"><span>📊</span><span>Controla gastos en pareja</span></div>
+          <div class="al-f"><span>🎯</span><span>Planifica metas financieras</span></div>
+          <div class="al-f"><span>🔓</span><span>Plan Premium desbloquea todo</span></div>
+          <div class="al-f"><span>🤖</span><span>Asesor IA disponible 24/7</span></div>
+        </div>
+      </div>
+      <div class="al-bot">© 2025 MONEVIA-DUO · Bolivia 🇧🇴</div>
+    </div>
+    <div class="ar">
+      <div class="auth-tabs">
+        <button class="auth-tab on" id="tL" onclick="showTab('l')">Iniciar sesión</button>
+        <button class="auth-tab" id="tR" onclick="showTab('r')">Registrarse</button>
+      </div>
+      <div class="err" id="err"></div>
+      <div id="fL">
+        <div class="fg"><label>Correo</label><input type="email" id="lE" placeholder="tucorreo@ejemplo.com"></div>
+        <div class="fg"><label>Contraseña</label><input type="password" id="lP" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+        <button class="btn-auth" onclick="doLogin()">Entrar →</button>
+        <div class="auth-or">o acceso rápido</div>
+        <button class="btn-demo" onclick="doDemo('free')">💚 Demo — Plan Gratuito</button>
+        <button class="btn-demo" style="margin-top:.5rem;border-color:var(--d);color:var(--dp)" onclick="doDemo('premium')">⭐ Demo — Plan Premium</button>
+      </div>
+      <div id="fR" style="display:none">
+        <div class="fg"><label>Nombre</label><input type="text" id="rN" placeholder="Ana y Carlos"></div>
+        <div class="fg"><label>Correo</label><input type="email" id="rE" placeholder="tucorreo@ejemplo.com"></div>
+        <div class="fg"><label>Contraseña</label><input type="password" id="rP" placeholder="Mínimo 6 caracteres" onkeydown="if(event.key==='Enter')doReg()"></div>
+        <button class="btn-auth" onclick="doReg()">Crear cuenta gratis →</button>
+      </div>
+      <p class="auth-note">Ingresa para elegir tu plan de acceso 🇧🇴</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PLANES ====== -->
+<div id="vPl" class="vista">
+  <header><div class="hi">
+    <div class="logo" onclick="irA('pl')">💚 MONEVIA<em>-DUO</em></div>
+    <div style="flex:1"></div>
+    <div class="ua" id="uaPl"></div>
+  </div></header>
+  <div class="planes-hero">
+    <h1>Elige tu <em>plan</em> perfecto</h1>
+    <p>Empieza gratis y cuando estés listo, desbloquea todas las herramientas que necesitas para transformar sus finanzas como pareja.</p>
+  </div>
+  <div class="planes-main">
+    <div class="planes-grid">
+      <!-- GRATUITO -->
+      <div class="plan-card">
+        <div class="pc-head">
+          <div class="pc-label">Para comenzar</div>
+          <div class="pc-name">Plan Básico</div>
+          <div class="pc-price"><sup>Bs. </sup>0</div>
+          <div class="pc-period">Siempre gratis · Sin tarjeta</div>
+        </div>
+        <div class="pc-body">
+          <ul class="feat-list">
+            <li><span class="ico ok">✓</span><span>Catálogo completo de plantillas (visualización)</span></li>
+            <li><span class="ico ok">✓</span><span>Calculadora de presupuesto básica</span></li>
+            <li><span class="ico ok">✓</span><span>Asesor IA con 5 consultas/día</span></li>
+            <li><span class="ico ok">✓</span><span>Acceso a 2 cursos introductorios gratuitos</span></li>
+            <li><span class="ico lok">🔒</span><span style="opacity:.55">Descarga de plantillas Excel avanzadas</span></li>
+            <li><span class="ico lok">🔒</span><span style="opacity:.55">Cursos en video completos</span></li>
+            <li><span class="ico lok">🔒</span><span style="opacity:.55">Gestor de ahorros en pareja</span></li>
+            <li><span class="ico lok">🔒</span><span style="opacity:.55">Asesoría personalizada ilimitada</span></li>
+          </ul>
+          <button class="btn-plan btn-free" id="btnFree" onclick="seleccionarPlan('free')">Continuar gratis</button>
+          <div class="plan-actual-badge" id="badgeFree"></div>
+        </div>
+      </div>
+      <!-- PREMIUM -->
+      <div class="plan-card prem-card">
+        <div class="pc-head">
+          <span class="prem-badge">⭐ MÁS POPULAR</span>
+          <div class="pc-label">Para parejas comprometidas</div>
+          <div class="pc-name" style="color:#fff">Plan Premium</div>
+          <div class="pc-price" style="color:#fff"><sup style="color:var(--d)">Bs. </sup>149</div>
+          <div class="pc-period" style="color:rgba(255,255,255,.7)">por mes · Cancela cuando quieras</div>
+        </div>
+        <div class="pc-body">
+          <ul class="feat-list">
+            <li><span class="ico ok">✓</span><span>Todo lo del Plan Básico</span></li>
+            <li><span class="ico ok">✓</span><span>Cursos en video completos (HD)</span></li>
+            <li><span class="ico ok">✓</span><span>Descarga directa de plantillas Excel avanzadas</span></li>
+            <li><span class="ico ok">✓</span><span>Gestor de ahorros compartido en pareja</span></li>
+            <li><span class="ico ok">✓</span><span>Asesor IA ilimitado + personalizado</span></li>
+            <li><span class="ico ok">✓</span><span>Informes financieros mensuales automáticos</span></li>
+            <li><span class="ico ok">✓</span><span>Soporte prioritario por WhatsApp</span></li>
+            <li><span class="ico ok">✓</span><span>Acceso anticipado a nuevos contenidos</span></li>
+          </ul>
+          <button class="btn-plan btn-prem" id="btnPrem" onclick="seleccionarPlan('premium')">Activar Premium ⭐</button>
+          <div class="plan-actual-badge" id="badgePrem"></div>
+        </div>
+      </div>
+    </div>
+    <!-- TABLA COMPARATIVA -->
+    <h2 class="comp-title">Comparativa detallada</h2>
+    <table class="comp-table">
+      <thead><tr><th>Función</th><th>Básico</th><th>Premium</th></tr></thead>
+      <tbody>
+        <tr><td>Catálogo de plantillas</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td>Calculadora presupuesto básica</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td>Cursos introductorios (2)</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td>Asesor IA</td><td>5/día</td><td>Ilimitado</td></tr>
+        <tr><td>Cursos en video completos</td><td><span class="crs">✗</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td>Descarga plantillas Excel</td><td><span class="crs">✗</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td>Gestor de ahorros en pareja</td><td><span class="crs">✗</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td>Asesoría personalizada</td><td><span class="crs">✗</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td>Informes automáticos</td><td><span class="crs">✗</span></td><td><span class="chk">✓</span></td></tr>
+        <tr><td>Soporte WhatsApp prioritario</td><td><span class="crs">✗</span></td><td><span class="chk">✓</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <footer><div class="fi2">
+    <div class="ft">
+      <div class="fb2"><h3>💚 MONEVIA-DUO</h3><p>Educación financiera para parejas bolivianas.</p>
+        <div class="redes"><a href="#" class="red tt">🎵 TikTok</a><a href="#" class="red ig">📸 Instagram</a><a href="#" class="red fb3">👥 Facebook</a><a href="#" class="red wa">💬 WhatsApp</a></div>
+      </div>
+      <div class="fc"><h4>Planes</h4><ul><li><a href="#">Plan Básico</a></li><li><a href="#">Plan Premium</a></li></ul></div>
+      <div class="fc"><h4>Soporte</h4><ul><li><a href="#">💬 Chat IA</a></li><li><a href="#">✅ Garantía 7 días</a></li></ul></div>
+    </div>
+    <div class="fbot"><p>© 2025 MONEVIA-DUO</p><span class="gar">✅ Garantía 7 días</span></div>
+  </div></footer>
+</div>
+
+<!-- ====== TIENDA ====== -->
+<div id="vT" class="vista">
+  <header><div class="hi">
+    <div class="logo" onclick="irA('t')">💚 MONEVIA<em>-DUO</em></div>
+    <div class="plan-chip free" id="planChip" onclick="irA('pl')">Plan Básico ↑</div>
+    <div class="ns"><span class="ns-ic">🔍</span><input type="text" id="busq" placeholder="Buscar..." onkeydown="if(event.key==='Enter')buscarIA()"></div>
+    <button style="background:var(--v);color:#fff;border:none;border-radius:50px;padding:.5rem 1rem;font-size:.8rem;font-weight:500;cursor:pointer;" onclick="buscarIA()">✨ IA</button>
+    <button class="cbtn" onclick="toggleC()">🛒 <span class="cbadge" id="cbadge">0</span></button>
+    <div class="ua" id="uaT"></div>
+  </div></header>
+  <div class="plan-banner free" id="planBanner">
+    ✨ Estás en el <strong>Plan Básico</strong> — Algunos contenidos están bloqueados. <a onclick="irA('pl')">Actualizar a Premium →</a>
+  </div>
+  <div class="hero"><div class="hero-in">
+    <h2>Herramientas para que dos <em>piensen como uno</em></h2>
+    <p>Cursos, plantillas y herramientas diseñadas para parejas que quieren construir un futuro financiero sólido.</p>
+    <div class="hbs"><span class="hb">📦 12 productos</span><span class="hb">💰 Precios en Bs.</span><span class="hb">🤖 Asesor IA</span><span class="hb">✅ Garantía 7 días</span></div>
+  </div></div>
+  <div class="fw"><div class="fi">
+    <button class="fbt on" onclick="filtrar('todos',this)">🏠 Todos</button>
+    <button class="fbt" onclick="filtrar('curso',this)">📚 Cursos</button>
+    <button class="fbt" onclick="filtrar('plantilla',this)">📊 Plantillas</button>
+    <button class="fbt" onclick="filtrar('herramienta',this)">🛠️ Herramientas</button>
+    <button class="fbt" onclick="filtrar('pack',this)">🎯 Packs</button>
+  </div></div>
+  <main class="main">
+    <div class="iar" id="iar"></div>
+    <!-- CALCULADORA GRATIS -->
+    <div class="calc-section" id="calcSection">
+      <div class="calc-head">
+        <span style="font-size:1.5rem">🧮</span>
+        <h3>Calculadora de Presupuesto en Pareja</h3>
+        <span class="calc-free-badge">GRATIS</span>
+      </div>
+      <div class="calc-grid">
+        <div class="calc-field"><label>Ingreso Pareja 1 (Bs.)</label><input type="number" id="ing1" placeholder="3500" min="0"></div>
+        <div class="calc-field"><label>Ingreso Pareja 2 (Bs.)</label><input type="number" id="ing2" placeholder="2800" min="0"></div>
+        <div class="calc-field"><label>Gastos Fijos (Bs.)</label><input type="number" id="gfijos" placeholder="2000" min="0"></div>
+        <div class="calc-field"><label>Gastos Variables (Bs.)</label><input type="number" id="gvar" placeholder="1200" min="0"></div>
+      </div>
+      <button class="btn-calc" onclick="calcular()">Calcular presupuesto</button>
+      <div class="calc-result" id="calcResult">
+        <div class="cr-row"><span>Ingreso total combinado</span><span id="crTot"></span></div>
+        <div class="cr-row"><span>Total gastos</span><span id="crGast"></span></div>
+        <div class="cr-row"><span>Ahorro recomendado (20%)</span><span id="crAh"></span></div>
+        <div class="cr-row"><span>💚 Saldo disponible</span><span id="crSaldo"></span></div>
+      </div>
+    </div>
+    <h2 class="st" id="stt">Todos los productos</h2>
+    <div class="grid" id="grid"></div>
+  </main>
+  <footer><div class="fi2">
+    <div class="ft">
+      <div class="fb2"><h3>💚 MONEVIA-DUO</h3><p>La plataforma de educación financiera para parejas bolivianas.</p>
+        <div class="redes"><a href="#" class="red tt">🎵 TikTok</a><a href="#" class="red ig">📸 Instagram</a><a href="#" class="red fb3">👥 Facebook</a><a href="#" class="red wa">💬 WhatsApp</a></div>
+      </div>
+      <div class="fc"><h4>Categorías</h4><ul><li><a href="#">📚 Cursos</a></li><li><a href="#">📊 Plantillas</a></li><li><a href="#">🛠️ Herramientas</a></li><li><a href="#">🎯 Packs Combo</a></li></ul></div>
+      <div class="fc"><h4>Soporte</h4><ul><li><a href="#">💬 Chat IA</a></li><li><a href="#">✅ Garantía 7 días</a></li><li><a href="#">📩 Contacto</a></li></ul></div>
+    </div>
+    <div class="fbot"><p>© 2025 MONEVIA-DUO</p><span class="gar">✅ Garantía 7 días</span></div>
+  </div></footer>
+</div>
+
+<!-- ====== PERFIL ====== -->
+<div id="vP" class="vista">
+  <header><div class="hi">
+    <div class="logo" onclick="irA('t')">💚 MONEVIA<em>-DUO</em></div>
+    <div style="flex:1"></div>
+    <button class="cbtn" onclick="irA('t')">← Tienda</button>
+    <div class="ua" id="uaP"></div>
+  </div></header>
+  <div class="ph"><div class="phi">
+    <div class="p-av" id="pAv"></div>
+    <div class="p-inf">
+      <h2 id="pN"></h2><p id="pE"></p>
+      <span class="p-plan-badge free" id="pPlanBadge">Plan Básico</span>
+    </div>
+  </div></div>
+  <main class="main" style="max-width:960px">
+    <!-- UPGRADE CTA -->
+    <div class="upgrade-cta" id="upgradeCta">
+      <div class="uc-txt">
+        <h3>🚀 Desbloquea el Plan Premium</h3>
+        <p>Accede a cursos completos, plantillas descargables, gestor de ahorros y asesoría personalizada por solo Bs. 149/mes.</p>
+      </div>
+      <button class="btn-uc" onclick="irA('pl')">Ver planes ⭐</button>
+    </div>
+    <div class="pd">
+      <h3>👤 Mis datos</h3>
+      <div class="dg">
+        <div class="dato"><label>Nombre</label><p id="dN"></p></div>
+        <div class="dato"><label>Email</label><p id="dE"></p></div>
+        <div class="dato"><label>Miembro desde</label><p id="dD"></p></div>
+        <div class="dato"><label>Plan activo</label><p id="dPlan" style="color:var(--v);font-weight:600"></p></div>
+      </div>
+    </div>
+    <h2 class="st">🎓 Mis Adquisiciones</h2>
+    <div class="adq-grid" id="adqG"></div>
+  </main>
+  <footer><div class="fi2">
+    <div class="ft">
+      <div class="fb2"><h3>💚 MONEVIA-DUO</h3><p>Educación financiera para parejas.</p>
+        <div class="redes"><a href="#" class="red tt">🎵 TikTok</a><a href="#" class="red ig">📸 Instagram</a><a href="#" class="red fb3">👥 Facebook</a><a href="#" class="red wa">💬 WhatsApp</a></div>
+      </div>
+      <div class="fc"><h4>Mi cuenta</h4><ul><li><a href="#" onclick="irA('p')">Mi Perfil</a></li><li><a href="#" onclick="irA('pl')">Mis Planes</a></li><li><a href="#" onclick="doLogout()">Cerrar Sesión</a></li></ul></div>
+      <div class="fc"><h4>Soporte</h4><ul><li><a href="#">💬 Chat IA</a></li><li><a href="#">✅ Garantía</a></li></ul></div>
+    </div>
+    <div class="fbot"><p>© 2025 MONEVIA-DUO</p><span class="gar">✅ Garantía 7 días</span></div>
+  </div></footer>
+</div>
+
+<!-- MODAL -->
+<div class="ov" id="ov" onclick="if(event.target===this)cerrarM()">
+  <div class="modal"><div class="mh" id="mH"></div><div class="mb" id="mB"></div></div>
+</div>
+<!-- CARRITO -->
+<div class="cp" id="cp"><div class="cp-h"><h3>🛒 Mi carrito</h3><button class="bx" onclick="toggleC()">✕</button></div><div class="cp-it" id="cpIt"></div><div class="cp-ft" id="cpFt"></div></div>
+<!-- CHAT -->
+<button class="cfab" onclick="toggleChat()">🤖</button>
+<div class="cpan" id="cpan">
+  <div class="ch"><div class="ch-av">🤖</div><div class="ch-hi"><strong>Asesor MONEVIA</strong><p>IA · En línea</p></div></div>
+  <div class="cms" id="cms"><div class="msg bot">¡Hola! 💚 Soy tu asesor IA. ¿En qué te ayudo hoy?</div></div>
+  <div class="cin"><input type="text" id="ci" placeholder="Escribe tu consulta..." onkeydown="if(event.key==='Enter')enviarChat()"><button class="csnd" onclick="enviarChat()">➤</button></div>
+</div>
+<div class="lo" id="loOv"><div class="lo-ic">🔒</div><p>Cerrando sesión...</p><small>Hasta pronto 💚</small></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DATOS =====
+const P = [
+  {id:1,nombre:'Presupuesto en Pareja',cat:'curso',catL:'Curso',premium:false,
+   img:'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=500',
+   desc:'Aprende a unificar ingresos y crear un presupuesto que ambos cumplan.',precio:189,orig:280,pop:true},
+  {id:2,nombre:'Inversión desde Cero',cat:'curso',catL:'Curso',premium:true,
+   img:'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&q=80&w=500',
+   desc:'Guía en video para que la pareja empiece a invertir juntos.',precio:220,orig:350,pop:false},
+  {id:3,nombre:'Deudas Cero: El Método',cat:'curso',catL:'Curso',premium:true,
+   img:'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=500',
+   desc:'Estrategia paso a paso para eliminar deudas sin conflictos.',precio:175,orig:260,pop:true},
+  {id:4,nombre:'Control Mensual Inteligente',cat:'plantilla',catL:'Plantilla',premium:false,
+   img:'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=500',
+   desc:'Visualiza y organiza ingresos, gastos y ahorros mensuales.',precio:45,orig:80,pop:false},
+  {id:5,nombre:'Planificador: Casa Propia',cat:'plantilla',catL:'Plantilla',premium:false,
+   img:'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=500',
+   desc:'Calcula cuánto ahorrar para la cuota inicial de su hogar.',precio:55,orig:90,pop:true},
+  {id:6,nombre:'Excel Avanzado de Gastos',cat:'plantilla',catL:'Plantilla',premium:true,
+   img:'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=500',
+   desc:'Descarga directa de plantilla Excel con macros y gráficas automáticas.',precio:80,orig:130,pop:false},
+  {id:7,nombre:'Calculadora de Metas',cat:'herramienta',catL:'Herramienta',premium:false,
+   img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=500',
+   desc:'Ingresa tu meta y calcula el ahorro mensual necesario.',precio:85,orig:130,pop:true},
+  {id:8,nombre:'Gestor de Ahorros en Pareja',cat:'herramienta',catL:'Herramienta',premium:true,
+   img:'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&q=80&w=500',
+   desc:'Dashboard compartido para visualizar y gestionar ahorros conjuntos.',precio:120,orig:180,pop:false},
+  {id:9,nombre:'Simulador de Inversión',cat:'herramienta',catL:'Herramienta',premium:true,
+   img:'https://images.unsplash.com/photo-1642790106117-e829e14a795f?auto=format&fit=crop&q=80&w=500',
+   desc:'Simula escenarios de inversión a 5, 10 y 20 años.',precio:95,orig:150,pop:false},
+  {id:10,nombre:'Pack Starter Pareja',cat:'pack',catL:'Pack Combo',premium:false,
+   img:'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=500',
+   desc:'Curso básico + Plantilla Control + Calculadora de Metas.',precio:280,orig:450,pop:true},
+  {id:11,nombre:'Pack Pro Financiero',cat:'pack',catL:'Pack Combo',premium:true,
+   img:'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&q=80&w=500',
+   desc:'Todos los cursos + plantillas Excel + gestor de ahorros.',precio:480,orig:780,pop:false},
+  {id:12,nombre:'Plan Libertad Financiera',cat:'pack',catL:'Pack Combo',premium:true,
+   img:'https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?auto=format&fit=crop&q=80&w=500',
+   desc:'Acceso total + asesoría IA personalizada 3 meses.',precio:650,orig:1100,pop:true},
+];
+const ADQ_FREE=[P[0],P[4]];
+const ADQ_PREM=[P[0],P[4],P[1],P[7]];
+
+let user=null, cart=[], plan='free';
+
+// ===== INIT =====
+function init(){
+  const r=localStorage.getItem('mv_user');
+  if(r){user=JSON.parse(r);plan=user.plan||'free';irA('t');}
+  else irA('a');
+}
+
+// ===== AUTH =====
+function showTab(t){
+  document.getElementById('tL').classList.toggle('on',t==='l');
+  document.getElementById('tR').classList.toggle('on',t==='r');
+  document.getElementById('fL').style.display=t==='l'?'':'none';
+  document.getElementById('fR').style.display=t==='r'?'':'none';
+  document.getElementById('err').classList.remove('on');
+}
+function showErr(m){const e=document.getElementById('err');e.textContent=m;e.classList.add('on');}
+function doLogin(){
+  const em=document.getElementById('lE').value.trim(),pw=document.getElementById('lP').value;
+  if(!em||!pw){showErr('Completa todos los campos.');return;}
+  if(!/\S+@\S+\.\S+/.test(em)){showErr('Correo no válido.');return;}
+  if(pw.length<6){showErr('Mínimo 6 caracteres.');return;}
+  const n=em.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  guardar({nombre:n,email:em,plan:'free'});
+}
+function doReg(){
+  const n=document.getElementById('rN').value.trim(),em=document.getElementById('rE').value.trim(),pw=document.getElementById('rP').value;
+  if(!n||!em||!pw){showErr('Completa todos los campos.');return;}
+  if(!/\S+@\S+\.\S+/.test(em)){showErr('Correo no válido.');return;}
+  if(pw.length<6){showErr('Mínimo 6 caracteres.');return;}
+  guardar({nombre:n,email:em,plan:'free'});
+}
+function doDemo(p){guardar({nombre:p==='premium'?'Ana y Carlos ⭐':'Ana y Carlos',email:'pareja@monevia.bo',plan:p});}
+function guardar(u){
+  user={...u,desde:new Date().toLocaleDateString('es-BO',{month:'long',year:'numeric'})};
+  plan=user.plan||'free';
+  localStorage.setItem('mv_user',JSON.stringify(user));
+  irA('pl');
+}
+function doLogout(){
+  document.getElementById('loOv').classList.add('on');
+  setTimeout(()=>{localStorage.removeItem('mv_user');user=null;cart=[];plan='free';actualizarC();document.getElementById('loOv').classList.remove('on');irA('a');},2000);
+}
+
+// ===== PLANES =====
+function seleccionarPlan(p){
+  plan=p;
+  if(user){user.plan=p;localStorage.setItem('mv_user',JSON.stringify(user));}
+  actualizarBadgePlanes();
+  irA('t');
+  toast(p==='premium'?'⭐ ¡Plan Premium activado! Todo desbloqueado.':'✅ Plan Básico activado. ¡Empecemos!');
+}
+function actualizarBadgePlanes(){
+  const isPrem=plan==='premium';
+  // chip header
+  const ch=document.getElementById('planChip');
+  if(ch){ch.className='plan-chip '+(isPrem?'prem':'free');ch.textContent=isPrem?'⭐ Premium':'Plan Básico ↑';}
+  // banner
+  const pb=document.getElementById('planBanner');
+  if(pb){
+    pb.className='plan-banner '+(isPrem?'prem':'free');
+    pb.innerHTML=isPrem?'⭐ <strong>Plan Premium activo</strong> — Tienes acceso completo a todos los contenidos 🎉':'✨ Estás en el <strong>Plan Básico</strong> — Algunos contenidos están bloqueados. <a onclick="irA(\'pl\')">Actualizar a Premium →</a>';
+  }
+  // botones en página planes
+  const bf=document.getElementById('btnFree'),bp=document.getElementById('btnPrem');
+  const bdf=document.getElementById('badgeFree'),bdp=document.getElementById('badgePrem');
+  if(bf&&bp){
+    if(!isPrem){bf.textContent='✅ Plan actual';bf.disabled=true;bf.style.opacity='.6';bp.textContent='Activar Premium ⭐';bp.disabled=false;bp.style.opacity='1';if(bdf)bdf.innerHTML='<span class="ok">● Plan activo</span>';if(bdp)bdp.innerHTML='';}
+    else{bp.textContent='✅ Plan actual';bp.disabled=true;bp.style.opacity='.6';bf.textContent='Cambiar a Básico';bf.disabled=false;bf.style.opacity='1';if(bdp)bdp.innerHTML='<span class="ok">⭐ Plan activo</span>';if(bdf)bdf.innerHTML='';}
+  }
+}
+
+// ===== NAV =====
+function getIni(n){const p=n.trim().split(' ');return p.length>=2?(p[0][0]+p[1][0]).toUpperCase():p[0].slice(0,2).toUpperCase();}
+function rNav(id){
+  const el=document.getElementById(id);if(!el)return;
+  if(user){
+    const i=getIni(user.nombre);
+    const planLabel=plan==='premium'?'⭐ Premium':'Plan Básico';
+    el.innerHTML=`<div class="ua"><button class="av-btn" onclick="toggleDD('${id}_dd')">${i}</button><div class="dd" id="${id}_dd"><div class="dd-hd"><strong>${user.nombre}</strong><span>${user.email}</span></div><div class="dd-plan">${planLabel}</div><button class="ddi" onclick="irA('p')">👤 Mi Perfil</button><button class="ddi" onclick="irA('pl')">🔓 Planes</button><button class="ddi red" onclick="doLogout()">🔒 Cerrar Sesión</button></div></div>`;
+  }else{el.innerHTML=`<button class="btn-ing" onclick="irA('a')">Ingresar</button>`;}
+}
+function toggleDD(id){const d=document.getElementById(id);if(d)d.classList.toggle('on');}
+document.addEventListener('click',e=>{if(!e.target.closest('.ua'))document.querySelectorAll('.dd').forEach(d=>d.classList.remove('on'));});
+
+// ===== NAVEGACIÓN =====
+function irA(v){
+  document.querySelectorAll('.vista').forEach(x=>x.classList.remove('activa'));
+  if(v==='a'){document.getElementById('vA').classList.add('activa');}
+  else if(v==='pl'){document.getElementById('vPl').classList.add('activa');rNav('uaPl');actualizarBadgePlanes();}
+  else if(v==='t'){document.getElementById('vT').classList.add('activa');rNav('uaT');actualizarBadgePlanes();renderP(P);}
+  else if(v==='p'){document.getElementById('vP').classList.add('activa');rNav('uaP');renderPerfil();}
+  document.querySelectorAll('.dd').forEach(d=>d.classList.remove('on'));
+}
+
+// ===== CALCULADORA =====
+function calcular(){
+  const i1=parseFloat(document.getElementById('ing1').value)||0;
+  const i2=parseFloat(document.getElementById('ing2').value)||0;
+  const gf=parseFloat(document.getElementById('gfijos').value)||0;
+  const gv=parseFloat(document.getElementById('gvar').value)||0;
+  if(!i1&&!i2){toast('Ingresa al menos un ingreso');return;}
+  const tot=i1+i2,gast=gf+gv,ah=tot*0.2,saldo=tot-gast-ah;
+  document.getElementById('crTot').textContent='Bs. '+tot.toLocaleString('es-BO');
+  document.getElementById('crGast').textContent='Bs. '+gast.toLocaleString('es-BO');
+  document.getElementById('crAh').textContent='Bs. '+ah.toLocaleString('es-BO');
+  const sl=document.getElementById('crSaldo');sl.textContent='Bs. '+saldo.toLocaleString('es-BO');
+  sl.closest('.cr-row').style.color=saldo>=0?'var(--v)':'#dc2626';
+  document.getElementById('calcResult').classList.add('show');
+}
+
+// ===== PRODUCTOS =====
+function isPremium(p){return p.premium && plan!=='premium';}
+function renderP(lista){
+  document.getElementById('grid').innerHTML=lista.map(p=>{
+    const locked=isPremium(p);
+    return `<div class="card${locked?' locked':''}" onclick="${locked?'abrirMLocked('+p.id+')':'abrirM('+p.id+')'}">
+      ${locked?`<span class="card-prem-tag">🔒 Premium</span>`:(!p.premium?`<span class="card-free-tag">✓ Gratis</span>`:'')}
+      <div class="ciw">
+        <img src="${p.img}" alt="${p.nombre}" loading="lazy">
+        <div class="cov"></div>
+        <span class="cb-t">${p.catL}</span>
+        ${p.pop&&!locked?'<span class="pop-tag">⭐ Popular</span>':''}
+      </div>
+      ${locked?`<div class="lock-ov"><div class="lock-ico">🔒</div><p>Contenido Premium</p><button class="btn-unlock" onclick="event.stopPropagation();irA('pl')">Desbloquear →</button></div>`:''}
+      <div class="cbb">
+        <div class="ccat">${p.catL}</div>
+        <div class="cnm">${p.nombre}</div>
+        <div class="cds">${locked?'Disponible con Plan Premium. Actualiza para acceder a este contenido.':p.desc}</div>
+        <div class="cft">
+          <div><span class="pr">Bs. ${p.precio}</span><span class="pro">Bs. ${p.orig}</span></div>
+          ${locked?`<button class="btn-ag disabled" onclick="event.stopPropagation();irA('pl')">🔒 Premium</button>`:`<button class="btn-ag" onclick="event.stopPropagation();agregarC(${p.id})">+ Agregar</button>`}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filtrar(cat,btn){
+  document.querySelectorAll('.fbt').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  const lista=cat==='todos'?P:P.filter(x=>x.cat===cat);
+  renderP(lista);
+  document.getElementById('stt').textContent=cat==='todos'?'Todos los productos':(P.find(x=>x.cat===cat)?.catL||'')+'s';
+}
+
+// ===== MODAL NORMAL =====
+async function abrirM(id){
+  const p=P.find(x=>x.id===id);
+  document.getElementById('mH').innerHTML=`<img src="${p.img}" alt="${p.nombre}"><div class="mh-grad"><div><h2>${p.nombre}</h2><p>${p.catL}</p></div></div>`;
+  document.getElementById('mB').innerHTML=`<div class="m-ia" id="mia"><span class="sp"></span>Generando descripción...</div><div class="m-pr">Bs. ${p.precio} <span>Bs. ${p.orig}</span></div><button class="btn-mc" onclick="agregarC(${p.id});cerrarM()">🛒 Agregar al carrito</button><button class="btn-mcl" onclick="cerrarM()">Cerrar</button>`;
+  document.getElementById('ov').classList.add('on');
+  try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:160,messages:[{role:'user',content:`Asesor MONEVIA-DUO Bolivia. Describe en 2 oraciones "${p.nombre}" para parejas. Cálido, motivador. Solo el texto.`}]})});const d=await r.json();document.getElementById('mia').textContent=d.content?.[0]?.text||p.desc;}catch{document.getElementById('mia').textContent=p.desc;}
+}
+
+// ===== MODAL LOCKED =====
+function abrirMLocked(id){
+  const p=P.find(x=>x.id===id);
+  document.getElementById('mH').innerHTML=`<img src="${p.img}" alt="${p.nombre}" style="filter:blur(3px)"><div class="mh-grad" style="background:rgba(15,45,30,.85)"><div><h2>${p.nombre}</h2><p>${p.catL}</p></div></div>`;
+  document.getElementById('mB').innerHTML=`<div class="m-locked"><div class="li">🔒</div><h3>Contenido exclusivo Premium</h3><p>Este contenido requiere el Plan Premium. Desbloquea cursos completos, plantillas descargables, gestor de ahorros y mucho más por solo <strong>Bs. 149/mes</strong>.</p><ul style="list-style:none;text-align:left;font-size:.82rem;color:var(--ts);margin-bottom:1rem;display:flex;flex-direction:column;gap:.4rem"><li>✅ Cursos en video HD</li><li>✅ Plantillas Excel para descargar</li><li>✅ Gestor de ahorros en pareja</li><li>✅ Asesoría IA ilimitada</li></ul><button class="btn-upgrade" onclick="cerrarM();irA('pl')">⭐ Ver Plan Premium — Bs. 149/mes</button></div><button class="btn-mcl" onclick="cerrarM()">Cerrar</button>`;
+  document.getElementById('ov').classList.add('on');
+}
+function cerrarM(){document.getElementById('ov').classList.remove('on');}
+
+// ===== BUSQUEDA IA =====
+async function buscarIA(){
+  const q=document.getElementById('busq').value.trim();if(!q)return;
+  const div=document.getElementById('iar');div.className='iar on';div.innerHTML='<span class="sp"></span>Analizando con IA...';
+  try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:240,messages:[{role:'user',content:`Asesor MONEVIA-DUO Bolivia. Búsqueda: "${q}". Productos: ${P.map(p=>p.id+'. '+p.nombre+(p.premium?' [Premium]':' [Gratis]')+' Bs.'+p.precio).join(', ')}. En 2 oraciones indica cuáles 2 productos son más relevantes. Tono amigable.`}]})});const d=await r.json();div.innerHTML='🤖 <strong>IA recomienda:</strong> '+(d.content?.[0]?.text||'Intenta otra búsqueda.');}catch{div.innerHTML='❌ No se pudo conectar. Intenta nuevamente.';}
+}
+
+// ===== CARRITO =====
+function agregarC(id){
+  const p=P.find(x=>x.id===id);
+  if(isPremium(p)){irA('pl');return;}
+  if(cart.find(x=>x.id===id)){toast('Ya está en el carrito');return;}
+  cart.push(p);actualizarC();toast('✅ '+p.nombre+' agregado');
+}
+function elimC(id){cart=cart.filter(x=>x.id!==id);actualizarC();}
+function actualizarC(){
+  document.getElementById('cbadge').textContent=cart.length;
+  const it=document.getElementById('cpIt'),ft=document.getElementById('cpFt');
+  if(!cart.length){it.innerHTML='<div class="cv">🛒<br><br>Tu carrito está vacío.</div>';ft.innerHTML='';return;}
+  it.innerHTML=cart.map(p=>`<div class="ci"><img class="ci-img" src="${p.img}" alt="${p.nombre}"><div class="ci-inf"><div class="ci-n">${p.nombre}</div><div class="ci-p">Bs. ${p.precio}</div></div><button class="ci-d" onclick="elimC(${p.id})">🗑️</button></div>`).join('');
+  const tot=cart.reduce((s,p)=>s+p.precio,0),ori=cart.reduce((s,p)=>s+p.orig,0);
+  ft.innerHTML=`<div class="tl"><span>Original</span><span>Bs. ${ori}</span></div><div class="tl" style="color:var(--vm)"><span>Ahorro</span><span>- Bs. ${ori-tot}</span></div><div class="tl G"><span>Total</span><span>Bs. ${tot}</span></div><button class="btn-pag" onclick="toast('🎉 ¡Procesando pago, gracias!')">💳 Pagar — Bs. ${tot}</button>`;
+}
+function toggleC(){document.getElementById('cp').classList.toggle('on');}
+
+// ===== CHAT =====
+function toggleChat(){document.getElementById('cpan').classList.toggle('on');}
+async function enviarChat(){
+  const inp=document.getElementById('ci'),txt=inp.value.trim();if(!txt)return;inp.value='';
+  const ms=document.getElementById('cms');
+  ms.innerHTML+=`<div class="msg usr">${txt}</div>`;
+  ms.innerHTML+=`<div class="msg bot" id="cr"><span class="sp"></span></div>`;ms.scrollTop=ms.scrollHeight;
+  try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:180,messages:[{role:'user',content:`Asesor financiero MONEVIA-DUO Bolivia. El usuario tiene plan ${plan}. Dice: "${txt}". Responde en máx 3 oraciones, cálido en español.`}]})});const d=await r.json();document.getElementById('cr').textContent=d.content?.[0]?.text||'Intenta reformular.';}catch{document.getElementById('cr').textContent='No pude conectarme.';}
+  ms.scrollTop=ms.scrollHeight;
+}
+
+// ===== PERFIL =====
+function renderPerfil(){
+  if(!user)return;
+  const isPrem=plan==='premium';
+  const i=getIni(user.nombre);
+  document.getElementById('pAv').textContent=i;
+  document.getElementById('pN').textContent=user.nombre;
+  document.getElementById('pE').textContent=user.email;
+  document.getElementById('dN').textContent=user.nombre;
+  document.getElementById('dE').textContent=user.email;
+  document.getElementById('dD').textContent=user.desde||'Hoy';
+  document.getElementById('dPlan').textContent=isPrem?'⭐ Plan Premium':'Plan Básico';
+  const pb=document.getElementById('pPlanBadge');
+  pb.className='p-plan-badge '+(isPrem?'prem':'free');
+  pb.textContent=isPrem?'⭐ Plan Premium':'Plan Básico';
+  const uc=document.getElementById('upgradeCta');
+  if(uc)uc.className='upgrade-cta'+(isPrem?' hidden':'');
+  const adq=isPrem?ADQ_PREM:ADQ_FREE;
+  document.getElementById('adqG').innerHTML=adq.map(p=>`<div class="adq-card"><img class="adq-img" src="${p.img}" alt="${p.nombre}" loading="lazy"><div class="adq-b"><div class="adq-tag">${p.catL}</div><div class="adq-n">${p.nombre}</div><div class="adq-st">✅ ${isPrem?'Premium ·':''} Acceder →</div></div></div>`).join('');
+}
+
+// ===== TOAST =====
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2800);}
+
+actualizarC();init();
+</script>
+</body>
+</html>
