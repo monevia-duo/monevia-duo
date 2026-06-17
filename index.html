@@ -887,5 +887,13 @@ function toast(m){const t=document.getElementById('toast');t.textContent=m;t.cla
 
 actualizarC();init();
 </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+const supabaseUrl = "TU_PROJECT_URL"
+const supabaseKey = "TU_ANON_KEY"
+
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+</script>
 </body>
 </html>
