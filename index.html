@@ -1227,14 +1227,11 @@ actualizarC();
 init();
 </script>
 
-<!-- ====== CONEXIÓN LIMPIA A SUPABASE ====== -->
+<!-- ====== CONEXIÓN SUPABASE ====== -->
 <script>
-  // Reemplaza con tus credenciales reales de Supabase al desplegar
-  const supabaseUrl = "https://dadpmgcqwhresbfwolfh.supabase.co"
-  const supabaseKey = "sb_publishable_F_CUfrbLPcnsFyT3JW93Sw_xZk89eeY"
-  
-  // Inicialización global única
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+  const supabaseUrl = "https://dadpmgcqwhresbfwolfh.supabase.co";
+  const supabaseKey = "sb_publishable_F_CUfrbLPcnsFyT3JW93Sw_xZk89eeY";
+  const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 </script>
 </body>
 </html>
