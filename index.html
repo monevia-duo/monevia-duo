@@ -688,14 +688,30 @@ function doLogin(){
   const n=em.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
   guardar({nombre:n,email:em,plan:'free'});
 }
-function doReg(){
-  const n=document.getElementById('rN').value.trim(),em=document.getElementById('rE').value.trim(),pw=document.getElementById('rP').value;
-  if(!n||!em||!pw){showErr('Completa todos los campos.');return;}
-  if(!/\S+@\S+\.\S+/.test(em)){showErr('Correo no válido.');return;}
-  if(pw.length<6){showErr('Mínimo 6 caracteres.');return;}
-  guardar({nombre:n,email:em,plan:'free'});
+async function doReg(){
+
+  const n=document.getElementById('rN').value.trim();
+  const em=document.getElementById('rE').value.trim();
+  const pw=document.getElementById('rP').value;
+
+  if(!n||!em||!pw){
+    showErr('Completa todos los campos.');
+    return;
+  }
+
+  const { data, error } = await supabase.auth.signUp({
+    email: em,
+    password: pw
+  });
+
+  if(error){
+    showErr(error.message);
+    return;
+  }
+
+  alert('Cuenta creada. Revisa tu correo para confirmar tu registro.');
 }
-function doDemo(p){guardar({nombre:p==='premium'?'Ana y Carlos ⭐':'Ana y Carlos',email:'pareja@monevia.bo',plan:p});}
+  function doDemo(p){guardar({nombre:p==='premium'?'Ana y Carlos ⭐':'Ana y Carlos',email:'pareja@monevia.bo',plan:p});}
 function guardar(u){
   user={...u,desde:new Date().toLocaleDateString('es-BO',{month:'long',year:'numeric'})};
   plan=user.plan||'free';
